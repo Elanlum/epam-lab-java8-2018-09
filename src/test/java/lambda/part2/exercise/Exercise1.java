@@ -1,13 +1,13 @@
 package lambda.part2.exercise;
 
-import lambda.data.Person;
-import org.junit.jupiter.api.Test;
-
-import java.util.function.BiFunction;
-import java.util.function.Function;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+
+import java.util.function.BiFunction;
+import java.util.function.BiPredicate;
+import java.util.function.Function;
+import lambda.data.Person;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings({"unused", "ConstantConditions"})
 class Exercise1 {
@@ -17,11 +17,11 @@ class Exercise1 {
         Person person = new Person("Иван", "Мельников", 33);
 
         // TODO create variable ageExtractor: Person -> Integer, using Function + method-reference
-
-//        assertThat(ageExtractor.apply(person), is(33));
+        Function<Person, Integer> ageExtractor = Person::getAge;
+        assertThat(ageExtractor.apply(person), is(33));
 
         // FIXME remove after implementation
-        throw new UnsupportedOperationException("Not implemented");
+//        throw new UnsupportedOperationException("Not implemented");
     }
 
     @Test
@@ -32,21 +32,28 @@ class Exercise1 {
 
         // TODO create variable sameAgesChecker: (Person, Person) -> boolean, using BiPredicate
 
-//        assertThat(sameAgesChecker.test(person1, person2), is(true));
-//        assertThat(sameAgesChecker.test(person1, person3), is(false));
-//        assertThat(sameAgesChecker.test(person2, person3), is(false));
+        BiPredicate<Person, Person> sameAgesChecker = (person, other) ->
+            person.getAge() == other.getAge();
+        assertThat(sameAgesChecker.test(person1, person2), is(true));
+        assertThat(sameAgesChecker.test(person1, person3), is(false));
+        assertThat(sameAgesChecker.test(person2, person3), is(false));
 
         // FIXME remove after implementation
-        throw new UnsupportedOperationException("Not implemented");
+//        throw new UnsupportedOperationException("Not implemented");
     }
 
     // TODO создать метод getFullName: Person -> String, извлекающий из объекта Person строку в формате "имя фамилия".
+    private static Function<Person, String> getFullName (Person person){
+        return Person::getFullName;
+    }
     // private static ... getFullName(...) {
 
     // TODO создать метод createExtractorAgeOfPersonWithTheLongestFullName: (Person -> String) -> ((Person, Person) -> int),
     // TODO - принимающий способ извлечения полного имени из объекта Person
     // TODO - возвращающий BiFunction, сравнивающий два объекта Person и возвращающий возраст того, чье полное имя длиннее.
-    // private static ... createExtractorAgeOfPersonWithTheLongestFullName(...) {
+    private static BiFunction<Person, Person, Integer> createExtractorAgeOfPersonWithTheLongestFullName (Function<Person, String> getFullName){
+        return (person, person2) -> getFullName.apply(person).length() > getFullName.apply(person2).length()  ? person.getAge() : person2.getAge();
+    }
 
     @Test
     void getAgeOfPersonWithTheLongestFullName() {
@@ -54,11 +61,11 @@ class Exercise1 {
         Person person2 = new Person("Илья", "Жирков", 22);
 
         // TODO воспользоваться ссылкой на метод getFullName
-        Function<Person, String> getFullName = null;
+        Function<Person, String> getFullName = Person::getFullName;
 
         // (Person, Person) -> Integer
         // TODO воспользоваться методом createExtractorAgeOfPersonWithTheLongestFullName
-        BiFunction<Person, Person, Integer> extractorAgeOfPersonWithTheLongestFullName = null;
+        BiFunction<Person, Person, Integer> extractorAgeOfPersonWithTheLongestFullName = createExtractorAgeOfPersonWithTheLongestFullName(getFullName);
 
         assertThat(extractorAgeOfPersonWithTheLongestFullName.apply(person1, person2), is(33));
     }
