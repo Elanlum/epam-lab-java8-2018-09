@@ -1,16 +1,16 @@
 package lambda.part3.exercise1;
 
-import lambda.data.Employee;
-import lambda.data.JobHistoryEntry;
-import lambda.data.Person;
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import java.util.function.Function;
+import lambda.data.Employee;
+import lambda.data.JobHistoryEntry;
+import lambda.data.Person;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings({"WeakerAccess", "unused"})
 public class Exercise1 {
@@ -21,11 +21,16 @@ public class Exercise1 {
         List<Integer> lengths = new ArrayList<>();
 
         // TODO функция извлечения информации о человеке из объекта сотрудника personExtractor: Employee -> Person
+      Function<Employee, Person> personExtractor = Employee::getPerson;
         // TODO функция извлечения полного имени из информации о человеке fullNameExtractor: Person -> String
+      Function<Person, String> fullNameExtractor = Person::getFullName;
         // TODO функция извлечения длины из строки stringLengthExtractor: String -> Integer
+      Function<String, Integer> stringLengthExtractor = String::length;
         // TODO функция извлечения длины полного имени из сотрудника fullNameLengthExtractor: Employee -> Integer
+      Function<Employee, Integer> fullNameLengthExtractor = employee ->
+          stringLengthExtractor.apply(fullNameExtractor.apply(personExtractor.apply(employee)));
         // TODO преобразование списка employees в lengths используя fullNameLengthExtractor
-
+      employees.forEach(employee -> lengths.add(fullNameLengthExtractor.apply(employee)));
         assertEquals(Arrays.asList(14, 19, 14, 15, 14, 16), lengths);
     }
 
