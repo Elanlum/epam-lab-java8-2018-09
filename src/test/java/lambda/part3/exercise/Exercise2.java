@@ -43,6 +43,7 @@ class Exercise2 {
             return getMapHelper(mapping);
         }
 
+        //применяет функцию для каждого элемента исходного списка и кладет его в новый список
         @NotNull
         private <R> MapHelper<R> getMapHelper(Function<T, R> mapping) {
             List<R> rList = new ArrayList<>();
@@ -59,8 +60,13 @@ class Exercise2 {
         public <R> MapHelper<R> flatMap(Function<T, List<R>> flatMapping) {
             List<R> newList = new ArrayList<>();
             source.forEach(element -> {
-                List<R> apply = flatMapping.apply(element);
-                apply.forEach(newList::add);
+                List<R> tempList = flatMapping.apply(element);//после применения функции получается список элементов
+                tempList.forEach(e -> newList.add(e));//каждый из которых кладем в заготовленный список
+            });
+            source.forEach(element -> {
+//                List<R> tempList = flatMapping.apply(element);
+//                newList.addAll(tempList);
+//                List<R> tempList = newList.addAll(flatMapping.apply(element)))
             });
             return from(newList);
         }
