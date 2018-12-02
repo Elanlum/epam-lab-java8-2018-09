@@ -59,15 +59,20 @@ class Exercise2 {
          */
         public <R> MapHelper<R> flatMap(Function<T, List<R>> flatMapping) {
             List<R> newList = new ArrayList<>();
-            source.forEach(element -> {
-                List<R> tempList = flatMapping.apply(element);//после применения функции получается список элементов
-                tempList.forEach(e -> newList.add(e));//каждый из которых кладем в заготовленный список
-            });
-            source.forEach(element -> {
-//                List<R> tempList = flatMapping.apply(element);
-//                newList.addAll(tempList);
-//                List<R> tempList = newList.addAll(flatMapping.apply(element)))
-            });
+            //***1
+//            source.forEach(element -> {
+//                List<R> tempList = flatMapping.apply(element);//после применения функции получается список элементов
+//                tempList.forEach(e -> newList.add(e));//каждый из которых кладем в заготовленный список
+//            });
+            //***2
+//            source.forEach(element -> {
+////                List<R> tempList = flatMapping.apply(element);
+////                newList.addAll(tempList);
+//            });
+            //***3
+//            source.forEach(element -> newList.addAll(flatMapping.apply(element)));
+            //***4
+            source.forEach(flatMapping.andThen(newList::addAll)::apply);
             return from(newList);
         }
     }
