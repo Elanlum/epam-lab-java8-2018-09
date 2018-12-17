@@ -1,21 +1,20 @@
 package streams.part2.exercise;
 
-import lambda.data.Employee;
-import lambda.data.JobHistoryEntry;
-import lambda.data.Person;
-import org.junit.jupiter.api.Test;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.hasEntry;
+import static org.hamcrest.Matchers.is;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.hasEntry;
-import static org.hamcrest.Matchers.is;
+import lambda.data.Employee;
+import lambda.data.JobHistoryEntry;
+import lambda.data.Person;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings({"ConstantConditions", "unused"})
 class Exercise1 {
@@ -26,6 +25,11 @@ class Exercise1 {
 
         // TODO реализация
         Long hours = null;
+
+        employees.stream()
+            .map(employee -> employee.getJobHistory().stream()
+                .filter(job -> "EPAM".equals(job.getEmployer()))
+                .map(job -> job.getDuration()));
 
         assertThat(hours, is(19L));
     }
